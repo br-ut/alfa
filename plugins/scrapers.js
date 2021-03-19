@@ -195,19 +195,15 @@ if (config.WORKTYPE == 'private') {
 
     Asena.addCommand({pattern: 'ig ?(.*)', fromMe: true, desc: Lang.VIDEO_DESC}, (async (message, match) => {
         if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_VIDEO,MessageType.text);
-        try {
-            var arama = await instagramGetUrl({videoId: (match[1])});
-        } catch {
-            return await message.client.sendMessage(message.jid,Lang.NO_RESULT,MessageType.text);
-        }
+        
         var reply = await message.client.sendMessage(message.jid,Lang.DOWNLOADING_VIDEO,MessageType.text);
 
-        var isave = instasave(arama.videoId);
-        isave.pipe(fs.createWriteStream('./' + arama.videoId + '.mp4'));
+        var isave = instasave(match[1]);
+        isave.pipe(fs.createWriteStream('./' + 'test' + '.mp4'));
 
         isave.on('end', async () => {
             reply = await message.client.sendMessage(message.jid,Lang.UPLOADING_VIDEO,MessageType.text);
-            await message.client.sendMessage(message.jid,fs.readFileSync('./' + arama.videoId + '.mp4'), MessageType.video, {mimetype: Mimetype.mp4});
+            await message.client.sendMessage(message.jid,fs.readFileSync('./' + 'test' + '.mp4'), MessageType.video, {mimetype: Mimetype.mp4});
         });
     }));
     
